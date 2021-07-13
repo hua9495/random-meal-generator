@@ -2,6 +2,10 @@ package com.alexchan.random_meal_generator.di
 
 import com.alexchan.random_meal_generator.BuildConfig
 import com.alexchan.random_meal_generator.BuildConfig.DEBUG
+import com.alexchan.random_meal_generator.api.CocktailApi
+import com.alexchan.random_meal_generator.api.MealApi
+import com.alexchan.random_meal_generator.repository.CocktailRepository
+import com.alexchan.random_meal_generator.repository.MealRepository
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.core.qualifier.named
@@ -17,9 +21,21 @@ val viewModelModule = module {
 }
 
 val repositoryModule = module {
+    single { CocktailRepository(get()) }
+    single { MealRepository(get()) }
 }
 
 val apiModule = module {
+    fun provideCocktailApi(retrofit: Retrofit): CocktailApi {
+        return retrofit.create(CocktailApi::class.java)
+    }
+
+    fun provideMealApi(retrofit: Retrofit): MealApi {
+        return retrofit.create(MealApi::class.java)
+    }
+
+    single { provideCocktailApi(get(named(COCKTAIL_API))) }
+    single { provideMealApi(get(named(MEAL_API))) }
 }
 
 val networkModule = module {
