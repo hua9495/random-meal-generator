@@ -13,6 +13,7 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import retrofit2.Retrofit
+import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
@@ -20,7 +21,7 @@ private const val COCKTAIL_API = "COCKTAIL_API"
 private const val MEAL_API = "MEAL_API"
 
 val viewModelModule = module {
-    viewModel { HomeViewModel(get()) }
+    viewModel { HomeViewModel(get(), get()) }
 }
 
 val repositoryModule = module {
@@ -64,6 +65,7 @@ val networkModule = module {
         return Retrofit.Builder()
             .baseUrl(baseUrl)
             .addConverterFactory(GsonConverterFactory.create())
+            .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
             .client(client)
             .build()
     }

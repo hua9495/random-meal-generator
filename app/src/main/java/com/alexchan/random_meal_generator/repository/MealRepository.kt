@@ -1,35 +1,26 @@
 package com.alexchan.random_meal_generator.repository
 
 import com.alexchan.random_meal_generator.api.MealApi
-import com.alexchan.random_meal_generator.core.Result
 import com.alexchan.random_meal_generator.model.Meal
+import io.reactivex.rxjava3.core.Observable
 
 class MealRepository(private val mealApi: MealApi) {
 
-    suspend fun fetchMeals(category: String): Result<List<Meal>> {
-        val response = mealApi.fetchMeals(category)
-        return if (response.isSuccessful) {
-            Result.Success(response.body()?.items!!)
-        } else {
-            Result.Failure(Throwable("Error fetching Meals!"))
+    fun fetchMeals(category: String): Observable<List<Meal>> {
+        return mealApi.fetchMeals(category).map {
+            it.items
         }
     }
 
-    suspend fun fetchCategories(): Result<List<Meal>> {
-        val response = mealApi.fetchCategories()
-        return if (response.isSuccessful) {
-            Result.Success(response.body()?.items!!)
-        } else {
-            Result.Failure(Throwable("Error fetching Categories!"))
+    fun fetchCategories(): Observable<List<Meal>> {
+        return mealApi.fetchCategories().map {
+            it.items
         }
     }
 
-    suspend fun fetchMealDetails(id: String): Result<List<Meal>> {
-        val response = mealApi.fetchMealDetails(id)
-        return if (response.isSuccessful) {
-            Result.Success(response.body()?.items!!)
-        } else {
-            Result.Failure(Throwable("Error fetching Meal Details!"))
+    fun fetchMealDetails(id: String): Observable<List<Meal>> {
+        return mealApi.fetchMealDetails(id).map {
+            it.items
         }
     }
 }

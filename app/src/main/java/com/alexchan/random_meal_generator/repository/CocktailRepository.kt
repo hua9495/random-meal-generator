@@ -1,35 +1,26 @@
 package com.alexchan.random_meal_generator.repository
 
 import com.alexchan.random_meal_generator.api.CocktailApi
-import com.alexchan.random_meal_generator.core.Result
 import com.alexchan.random_meal_generator.model.Drink
+import io.reactivex.rxjava3.core.Observable
 
 class CocktailRepository(private val cocktailApi: CocktailApi) {
 
-    suspend fun fetchCocktails(category: String): Result<List<Drink>> {
-        val response = cocktailApi.fetchCocktails(category)
-        return if (response.isSuccessful) {
-            Result.Success(response.body()?.items!!)
-        } else {
-            Result.Failure(Throwable("Error fetching Cocktails!"))
+    fun fetchCocktails(category: String): Observable<List<Drink>> {
+        return cocktailApi.fetchCocktails(category).map {
+            it.items
         }
     }
 
-    suspend fun fetchCategories(): Result<List<Drink>> {
-        val response = cocktailApi.fetchCategories()
-        return if (response.isSuccessful) {
-            Result.Success(response.body()?.items!!)
-        } else {
-            Result.Failure(Throwable("Error fetching Categories!"))
+    fun fetchCategories(): Observable<List<Drink>> {
+        return cocktailApi.fetchCategories().map {
+            it.items
         }
     }
 
-    suspend fun fetchCocktailDetails(id: String): Result<List<Drink>> {
-        val response = cocktailApi.fetchCocktailDetails(id)
-        return if (response.isSuccessful) {
-            Result.Success(response.body()?.items!!)
-        } else {
-            Result.Failure(Throwable("Error fetching Cocktail Details!"))
+    fun fetchCocktailDetails(id: String): Observable<List<Drink>> {
+        return cocktailApi.fetchCocktailDetails(id).map {
+            it.items
         }
     }
 }

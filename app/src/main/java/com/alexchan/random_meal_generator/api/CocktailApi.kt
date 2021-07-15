@@ -1,17 +1,17 @@
 package com.alexchan.random_meal_generator.api
 
 import com.alexchan.random_meal_generator.model.Drinks
-import retrofit2.Response
+import io.reactivex.rxjava3.core.Observable
 import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface CocktailApi {
     @GET("list.php")
-    suspend fun fetchCategories(@Query("c") category: String = "list"): Response<Drinks>
+    fun fetchCategories(@Query("c") category: String = "list"): Observable<Drinks>
 
     @GET("filter.php")
-    suspend fun fetchCocktails(@Query("c") category: String = "list"): Response<Drinks>
+    fun fetchCocktails(@Query("c") category: String = "list"): Observable<Drinks>
 
     @GET("lookup.php")
-    suspend fun fetchCocktailDetails(@Query("i") id: String): Response<Drinks>
+    fun fetchCocktailDetails(@Query("i") id: String): Observable<Drinks>
 }
