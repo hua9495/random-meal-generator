@@ -5,15 +5,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.setupWithNavController
 import com.alexchan.random_meal_generator.R
 import com.alexchan.random_meal_generator.core.BaseFragment
 import com.alexchan.random_meal_generator.databinding.FragmentHomeBinding
 import io.reactivex.rxjava3.schedulers.Schedulers
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class HomeFragment : BaseFragment() {
 
-    private val viewModel: HomeViewModel by viewModel()
+    private val viewModel: MealGeneratorViewModel by sharedViewModel()
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = requireNotNull(_binding)
 
@@ -59,6 +61,19 @@ class HomeFragment : BaseFragment() {
                         }
                     )
             )
+
+            mealsSelectionTextView.setOnItemClickListener { _, _, index, _ ->
+                viewModel.setMealCategory(index)
+                updateViews()
+            }
+            drinksSelectionTextView.setOnItemClickListener { _, _, index, _ ->
+                viewModel.setDrinkCategory(index)
+                updateViews()
+            }
+            generateButton.setOnClickListener {
+                findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToResultFragment())
+            }
+            toolbar.setupWithNavController(findNavController())
         }
     }
 
@@ -69,20 +84,6 @@ class HomeFragment : BaseFragment() {
     ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        with(binding) {
-            mealsSelectionTextView.setOnItemClickListener { _, _, index, _ ->
-                viewModel.setMealCategory(index)
-                updateViews()
-            }
-            drinksSelectionTextView.setOnItemClickListener { _, _, index, _ ->
-                viewModel.setDrinkCategory(index)
-                updateViews()
-            }
-        }
     }
 
     override fun onDestroyView() {

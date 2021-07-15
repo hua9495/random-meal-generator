@@ -1,7 +1,7 @@
 package com.alexchan.random_meal_generator.repository
 
 import com.alexchan.random_meal_generator.api.CocktailApi
-import com.alexchan.random_meal_generator.model.Drink
+import com.alexchan.random_meal_generator.model.api.Drink
 import io.reactivex.rxjava3.core.Observable
 
 class CocktailRepository(private val cocktailApi: CocktailApi) {

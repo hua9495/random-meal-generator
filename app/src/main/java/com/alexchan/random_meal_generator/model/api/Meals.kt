@@ -1,4 +1,4 @@
-package com.alexchan.random_meal_generator.model
+package com.alexchan.random_meal_generator.model.api
 
 import com.google.gson.annotations.SerializedName
 

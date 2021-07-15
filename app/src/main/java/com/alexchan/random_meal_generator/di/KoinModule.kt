@@ -6,7 +6,7 @@ import com.alexchan.random_meal_generator.api.CocktailApi
 import com.alexchan.random_meal_generator.api.MealApi
 import com.alexchan.random_meal_generator.repository.CocktailRepository
 import com.alexchan.random_meal_generator.repository.MealRepository
-import com.alexchan.random_meal_generator.ui.HomeViewModel
+import com.alexchan.random_meal_generator.ui.MealGeneratorViewModel
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -21,7 +21,7 @@ private const val COCKTAIL_API = "COCKTAIL_API"
 private const val MEAL_API = "MEAL_API"
 
 val viewModelModule = module {
-    viewModel { HomeViewModel(get(), get()) }
+    viewModel { MealGeneratorViewModel(get(), get()) }
 }
 
 val repositoryModule = module {

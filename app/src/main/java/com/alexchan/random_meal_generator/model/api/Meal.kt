@@ -1,13 +1,13 @@
-package com.alexchan.random_meal_generator.model
+package com.alexchan.random_meal_generator.model.api
 
 import com.google.gson.annotations.SerializedName
 
-data class Drink(
-    @SerializedName("idDrink")
+data class Meal(
+    @SerializedName("idMeal")
     var id: String?,
-    @SerializedName("strDrink")
+    @SerializedName("strMeal")
     var name: String?,
-    @SerializedName("strDrinkThumb")
+    @SerializedName("strMealThumb")
     val imageUrl: String?,
     @SerializedName("strCategory")
     val category: String?,

@@ -1,6 +1,6 @@
 package com.alexchan.random_meal_generator.api
 
-import com.alexchan.random_meal_generator.model.Drinks
+import com.alexchan.random_meal_generator.model.api.Drinks
 import io.reactivex.rxjava3.core.Observable
 import retrofit2.http.GET
 import retrofit2.http.Query
