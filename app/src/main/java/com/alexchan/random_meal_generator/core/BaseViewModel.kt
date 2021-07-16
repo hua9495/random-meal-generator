@@ -1,20 +1,20 @@
 package com.alexchan.random_meal_generator.core
 
-import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModel
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.disposables.Disposable
 
-open class BaseFragment : Fragment() {
+open class BaseViewModel : ViewModel() {
 
-    val subscriptions = CompositeDisposable()
+    private val subscriptions = CompositeDisposable()
 
     fun subscribe(disposable: Disposable): Disposable {
         subscriptions.add(disposable)
         return disposable
     }
 
-    override fun onStop() {
-        super.onStop()
+    override fun onCleared() {
+        super.onCleared()
         subscriptions.clear()
     }
 }

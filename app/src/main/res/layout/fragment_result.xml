@@ -20,56 +20,80 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:orientation="horizontal"
+        android:padding="8dp">
 
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="match_parent"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="@string/meal"
-            android:textAppearance="?textAppearanceHeadline6" />
+            android:layout_weight="1"
+            android:padding="8dp">
 
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/mealImageView"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:layout_marginTop="16dp"
-            android:scaleType="centerCrop"
-            app:shapeAppearanceOverlay="@style/RoundedImageView"
-            tools:src="@drawable/img_meal" />
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/mealLabelTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/meal"
+                android:textAppearance="?textAppearanceHeadline6"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/mealNameTextView"
-            android:layout_width="match_parent"
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/mealImageView"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="8dp"
+                android:scaleType="centerCrop"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintTop_toBottomOf="@id/mealLabelTextView"
+                app:shapeAppearanceOverlay="@style/RoundedImageView"
+                tools:src="@drawable/img_meal" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/mealNameTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:textAppearance="?textAppearanceSubtitle1"
+                app:layout_constraintTop_toBottomOf="@id/mealImageView"
+                tools:text="Title" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:textAppearance="?textAppearanceSubtitle1"
-            tools:text="Title" />
+            android:layout_weight="1"
+            android:padding="8dp">
 
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:text="@string/drink"
-            android:textAppearance="?textAppearanceHeadline6" />
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/drinkLabelTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/drink"
+                android:textAppearance="?textAppearanceHeadline6"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/drinkImageView"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:layout_marginTop="16dp"
-            android:scaleType="centerCrop"
-            app:shapeAppearanceOverlay="@style/RoundedImageView"
-            tools:src="@drawable/img_meal" />
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/drinkImageView"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="8dp"
+                android:scaleType="centerCrop"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintTop_toBottomOf="@id/drinkLabelTextView"
+                app:shapeAppearanceOverlay="@style/RoundedImageView"
+                tools:src="@drawable/img_meal" />
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/drinkNameTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:textAppearance="?textAppearanceSubtitle1"
-            tools:text="Title" />
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/drinkNameTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:textAppearance="?textAppearanceSubtitle1"
+                app:layout_constraintTop_toBottomOf="@id/drinkImageView"
+                tools:text="Title" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </LinearLayout>
 

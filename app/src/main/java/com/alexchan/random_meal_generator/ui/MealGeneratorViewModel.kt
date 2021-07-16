@@ -1,24 +1,34 @@
 package com.alexchan.random_meal_generator.ui
 
-import androidx.lifecycle.ViewModel
-import com.alexchan.random_meal_generator.model.api.Drink
-import com.alexchan.random_meal_generator.model.api.Meal
+import com.alexchan.random_meal_generator.core.BaseViewModel
+import com.alexchan.random_meal_generator.model.Drink
+import com.alexchan.random_meal_generator.model.Meal
 import com.alexchan.random_meal_generator.repository.CocktailRepository
 import com.alexchan.random_meal_generator.repository.MealRepository
 import com.alexchan.random_meal_generator.util.guard
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.disposables.Disposable
+import io.reactivex.rxjava3.schedulers.Schedulers
+import io.reactivex.rxjava3.subjects.BehaviorSubject
+import io.reactivex.rxjava3.subjects.PublishSubject
 
 class MealGeneratorViewModel(
     private val mealRepository: MealRepository,
     private val cocktailRepository: CocktailRepository
-) : ViewModel() {
+) : BaseViewModel() {
 
     // Store references of categories.
     private var mealCategories = listOf<String>()
     private var drinkCategories = listOf<String>()
 
-    var selectedMealCategory: String? = null
-    var selectDrinkCategory: String? = null
+    private var selectedMealCategory: String? = null
+    private var selectDrinkCategory: String? = null
+
+    val mealCategoryList: PublishSubject<List<String>> = PublishSubject.create()
+    val drinkCategoryList: PublishSubject<List<String>> = PublishSubject.create()
+
+    val mealCombo: BehaviorSubject<Pair<Meal, Drink>> = BehaviorSubject.create()
 
     val shouldEnableButton: Boolean
         get() {
@@ -33,51 +43,51 @@ class MealGeneratorViewModel(
         selectDrinkCategory = drinkCategories[index]
     }
 
-    fun getMealCategories(): Observable<List<String>> {
-        return mealRepository.fetchCategories()
-            .map {
-                val categories = it.map { drink ->
-                    drink.category!!
+    fun fetchCategories(): Disposable {
+        return subscribe(
+            Observable.zip(
+                mealRepository.fetchCategories(),
+                cocktailRepository.fetchCategories(),
+                { meals, drinks ->
+                    return@zip Pair(meals, drinks)
                 }
-                categories
-            }
-            .doOnNext {
-                mealCategories = it
-            }
+            )
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { (meals, drinks) ->
+                    mealCategories = meals.map { meal ->
+                        meal.category!!
+                    }
+                    drinkCategories = drinks.map { drink ->
+                        drink.category!!
+                    }
+                    mealCategoryList.onNext(mealCategories)
+                    drinkCategoryList.onNext(drinkCategories)
+                }
+        )
     }
 
-    fun getDrinkCategories(): Observable<List<String>> {
-        return cocktailRepository.fetchCategories()
-            .map {
-                val categories = it.map { drink ->
-                    drink.category!!
-                }
-                categories
-            }
-            .doOnNext {
-                drinkCategories = it
-            }
-    }
-
-    fun getRandomMeal(): Observable<Meal> {
-        val category = selectedMealCategory.guard {
-            return Observable.error(Throwable("No meal category selected!"))
+    fun fetchRandomMealCombo(): Disposable {
+        val mealCategory = selectedMealCategory.guard {
+            return Disposable.empty()
+        }
+        val drinkCategory = selectDrinkCategory.guard {
+            return Disposable.empty()
         }
 
-        return mealRepository.fetchMeals(category)
-            .map {
-                it.random()
-            }
-    }
-
-    fun getRandomDrink(): Observable<Drink> {
-        val category = selectDrinkCategory.guard {
-            return Observable.error(Throwable("No drink category selected!"))
-        }
-
-        return cocktailRepository.fetchCocktails(category)
-            .map {
-                it.random()
-            }
+        return subscribe(
+            Observable.zip(
+                mealRepository.fetchMeals(mealCategory),
+                cocktailRepository.fetchCocktails(drinkCategory),
+                { meals, drinks ->
+                    return@zip Pair(meals, drinks)
+                }
+            )
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { (meals, drinks) ->
+                    mealCombo.onNext(meals.random() to drinks.random())
+                }
+        )
     }
 }

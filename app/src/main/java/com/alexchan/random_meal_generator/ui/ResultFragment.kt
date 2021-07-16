@@ -5,17 +5,14 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import coil.load
-import com.alexchan.random_meal_generator.core.BaseFragment
 import com.alexchan.random_meal_generator.databinding.FragmentResultBinding
-import com.alexchan.random_meal_generator.model.ui.MealCombo
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.schedulers.Schedulers
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
-class ResultFragment : BaseFragment() {
+class ResultFragment : Fragment() {
 
     private val viewModel: MealGeneratorViewModel by sharedViewModel()
     private var _binding: FragmentResultBinding? = null
@@ -24,20 +21,10 @@ class ResultFragment : BaseFragment() {
     override fun onStart() {
         super.onStart()
         with(binding) {
-            Observable.zip(
-                viewModel.getRandomMeal(),
-                viewModel.getRandomDrink(),
-                { meal, drink ->
-                    return@zip MealCombo(meal, drink)
-                }
-            )
-                .subscribeOn(Schedulers.io())
-                .observeOn(Schedulers.io())
+            viewModel.fetchRandomMealCombo()
+            viewModel.mealCombo
                 .subscribe(
-                    {
-                        val meal = it.meal
-                        val drink = it.drink
-
+                    { (meal, drink) ->
                         mealImageView.load(meal.imageUrl)
                         mealNameTextView.text = meal.name
 

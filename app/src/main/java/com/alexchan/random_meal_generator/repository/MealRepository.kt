@@ -1,7 +1,7 @@
 package com.alexchan.random_meal_generator.repository
 
 import com.alexchan.random_meal_generator.api.MealApi
-import com.alexchan.random_meal_generator.model.api.Meal
+import com.alexchan.random_meal_generator.model.Meal
 import io.reactivex.rxjava3.core.Observable
 
 class MealRepository(private val mealApi: MealApi) {
@@ -18,9 +18,9 @@ class MealRepository(private val mealApi: MealApi) {
         }
     }
 
-    fun fetchMealDetails(id: String): Observable<List<Meal>> {
+    fun fetchMealDetails(id: String): Observable<Meal> {
         return mealApi.fetchMealDetails(id).map {
-            it.items
+            it.items?.first()
         }
     }
 }

@@ -5,15 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.alexchan.random_meal_generator.R
-import com.alexchan.random_meal_generator.core.BaseFragment
 import com.alexchan.random_meal_generator.databinding.FragmentHomeBinding
-import io.reactivex.rxjava3.schedulers.Schedulers
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
-class HomeFragment : BaseFragment() {
+class HomeFragment : Fragment() {
 
     private val viewModel: MealGeneratorViewModel by sharedViewModel()
     private var _binding: FragmentHomeBinding? = null
@@ -22,46 +21,37 @@ class HomeFragment : BaseFragment() {
     override fun onStart() {
         super.onStart()
         with(binding) {
-            // Subscribe drinks category.
-            subscribe(
-                viewModel.getDrinkCategories()
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(Schedulers.single())
-                    .subscribe(
-                        {
-                            val adapter = ArrayAdapter(
-                                requireContext(),
-                                R.layout.category_list_item,
-                                it
-                            )
-                            drinksSelectionTextView.setAdapter(adapter)
-                        },
-                        {
-                            // TODO: Add error handling.
-                        }
-                    )
-            )
+            viewModel.fetchCategories()
+            viewModel.drinkCategoryList
+                .subscribe(
+                    {
+                        val adapter = ArrayAdapter(
+                            requireContext(),
+                            R.layout.category_list_item,
+                            it
+                        )
+                        drinksSelectionTextView.setAdapter(adapter)
+                    },
+                    {
+                        // TODO: Add error handling.
+                    }
+                )
+            viewModel.mealCategoryList
+                .subscribe(
+                    {
+                        val adapter = ArrayAdapter(
+                            requireContext(),
+                            R.layout.category_list_item,
+                            it
+                        )
+                        mealsSelectionTextView.setAdapter(adapter)
+                    },
+                    {
+                        // TODO: Add error handling.
+                    }
+                )
 
-            // Subscribe meal category.
-            subscribe(
-                viewModel.getMealCategories()
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(Schedulers.single())
-                    .subscribe(
-                        {
-                            val adapter = ArrayAdapter(
-                                requireContext(),
-                                R.layout.category_list_item,
-                                it
-                            )
-                            mealsSelectionTextView.setAdapter(adapter)
-                        },
-                        {
-                            // TODO: Add error handling.
-                        }
-                    )
-            )
-
+            updateViews()
             mealsSelectionTextView.setOnItemClickListener { _, _, index, _ ->
                 viewModel.setMealCategory(index)
                 updateViews()
