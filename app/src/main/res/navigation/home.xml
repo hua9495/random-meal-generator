@@ -22,6 +22,18 @@
         android:id="@+id/resultFragment"
         android:name="com.alexchan.random_meal_generator.ui.ResultFragment"
         android:label="@string/meal_combo"
-        tools:layout="@layout/fragment_result" />
+        tools:layout="@layout/fragment_result">
+
+        <argument
+            android:name="mealCategory"
+            android:defaultValue=""
+            app:argType="string" />
+
+        <argument
+            android:name="drinkCategory"
+            android:defaultValue=""
+            app:argType="string" />
+
+    </fragment>
 
 </navigation>
