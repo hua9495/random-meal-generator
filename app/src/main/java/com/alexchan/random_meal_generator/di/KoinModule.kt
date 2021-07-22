@@ -2,11 +2,18 @@ package com.alexchan.random_meal_generator.di
 
 import com.alexchan.random_meal_generator.BuildConfig
 import com.alexchan.random_meal_generator.BuildConfig.DEBUG
+import com.alexchan.random_meal_generator.api.CocktailApi
+import com.alexchan.random_meal_generator.api.MealApi
+import com.alexchan.random_meal_generator.repository.CocktailRepository
+import com.alexchan.random_meal_generator.repository.MealRepository
+import com.alexchan.random_meal_generator.ui.view_model.DefaultCategoriesViewModel
+import com.alexchan.random_meal_generator.ui.view_model.DefaultResultViewModel
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import retrofit2.Retrofit
+import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
@@ -14,12 +21,26 @@ private const val COCKTAIL_API = "COCKTAIL_API"
 private const val MEAL_API = "MEAL_API"
 
 val viewModelModule = module {
+    single { DefaultResultViewModel(get(), get()) }
+    single { DefaultCategoriesViewModel(get(), get()) }
 }
 
 val repositoryModule = module {
+    single { CocktailRepository(get()) }
+    single { MealRepository(get()) }
 }
 
 val apiModule = module {
+    fun provideCocktailApi(retrofit: Retrofit): CocktailApi {
+        return retrofit.create(CocktailApi::class.java)
+    }
+
+    fun provideMealApi(retrofit: Retrofit): MealApi {
+        return retrofit.create(MealApi::class.java)
+    }
+
+    single { provideCocktailApi(get(named(COCKTAIL_API))) }
+    single { provideMealApi(get(named(MEAL_API))) }
 }
 
 val networkModule = module {
@@ -45,6 +66,7 @@ val networkModule = module {
         return Retrofit.Builder()
             .baseUrl(baseUrl)
             .addConverterFactory(GsonConverterFactory.create())
+            .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
             .client(client)
             .build()
     }

@@ -1,3 +1,9 @@
 <resources>
-    <string name="app_name">random-meal-generator</string>
+    <string name="app_name">Random Meal Generator</string>
+    <string name="select_drinks_category">Drinks category</string>
+    <string name="select_meals_category">Meal category</string>
+    <string name="generate">Generate</string>
+    <string name="meal_combo">Meal Combo</string>
+    <string name="meal">Meal</string>
+    <string name="drink">Drink</string>
 </resources>
